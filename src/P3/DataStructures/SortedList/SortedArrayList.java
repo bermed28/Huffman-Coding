@@ -1,7 +1,6 @@
 package P3.DataStructures.SortedList;
 
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 
 /**
  * @author Juan O. López
@@ -20,27 +19,6 @@ public class SortedArrayList<E extends Comparable<? super E>> extends AbstractSo
 		currentSize = 0;
 	}
 
-	private class SortedListIterator implements Iterator<E> {
-		private int currentPosition;
-		
-		public SortedListIterator() {
-			this.currentPosition = 0;
-		}
-
-		@Override
-		public boolean hasNext() {
-			return this.currentPosition < size();
-		}
-
-		@Override
-		public E next() {
-			if (this.hasNext()) {
-				return (E) elements[this.currentPosition++];
-			}
-			else
-				throw new NoSuchElementException();
-		}
-	}
 	@Override
 	public void add(E e) {
 		if (size() == elements.length)
@@ -165,7 +143,8 @@ public class SortedArrayList<E extends Comparable<? super E>> extends AbstractSo
 
 	@Override
 	public Iterator<E> iterator() {
-		return new SortedListIterator();
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

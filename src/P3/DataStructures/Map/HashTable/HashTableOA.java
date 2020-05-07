@@ -2,9 +2,9 @@ package P3.DataStructures.Map.HashTable;
 
 import java.io.PrintStream;
 
-import ciic4020.linkedlist.LinkedList;
-import ciic4020.linkedlist.List;
-import ciic4020.map.Map;
+import P3.DataStructures.List.LinkedList;
+import P3.DataStructures.List.List;
+import P3.DataStructures.Map.Map;
 
 public class HashTableOA<K, V> implements Map<K, V> {
 

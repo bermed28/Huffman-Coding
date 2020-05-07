@@ -2,8 +2,9 @@ package P3.DataStructures.Map;
 
 import java.io.PrintStream;
 
-import ciic4020.linkedlist.List;
-import ciic4020.linkedlist.LinkedList;
+import P3.DataStructures.List.LinkedList;
+import P3.DataStructures.List.List;
+
 
 public class LinkedListMap<K, V> implements Map<K, V> {
 

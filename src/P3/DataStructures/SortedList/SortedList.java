@@ -2,7 +2,7 @@ package P3.DataStructures.SortedList;
 
 import java.util.Iterator;
 
-public interface SortedList<E extends Comparable<? super E>> extends Iterable<E> {
+public interface SortedList<E extends Comparable<? super E>> {
 
 	/**
 	 * Add a new value to the sorted list in the appropriate position
@@ -81,6 +81,7 @@ public interface SortedList<E extends Comparable<? super E>> extends Iterable<E>
 	 * @return Array with a copy of the elements
 	 */
 	E[] toArray();
-	
+
 	Iterator<E> iterator();
+
 }

@@ -37,6 +37,7 @@ public class HashTableSC<K, V> implements Map<K, V> {
 	private List<BucketNode<K, V>>[] buckets;
 	private HashFunction<K> hashFunction;
 	private final static double loadFactor = 0.75;
+	private static final int DEFAULT_SIZE = 10;
 
 
 	@SuppressWarnings("unchecked")
@@ -50,6 +51,19 @@ public class HashTableSC<K, V> implements Map<K, V> {
 		this.hashFunction = hashFunction;
 		buckets = new LinkedList[initialCapacity];
 		for (int i = 0; i < initialCapacity; i++)
+			buckets[i] = new LinkedList<BucketNode<K, V>>();
+
+	}
+	
+	@SuppressWarnings("unchecked")
+	public HashTableSC(HashFunction<K> hashFunction) { //delegate to this constructor if no capacity is entered by user 
+		if (hashFunction == null)
+			throw new IllegalArgumentException("Hash function cannot be null");
+
+		currentSize = 0;
+		this.hashFunction = hashFunction;
+		buckets = new LinkedList[DEFAULT_SIZE];
+		for (int i = 0; i < DEFAULT_SIZE; i++)
 			buckets[i] = new LinkedList<BucketNode<K, V>>();
 
 	}
@@ -85,7 +99,7 @@ public class HashTableSC<K, V> implements Map<K, V> {
 			rehash();
 		}
 		
-		System.out.println("Adding Element with key: " + key);
+		//System.out.println("Adding Element with key: " + key);
 
 		/* Determine the bucket corresponding to this key */
 		int targetBucket = hashFunction.hashCode(key) % buckets.length;
