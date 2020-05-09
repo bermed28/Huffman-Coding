@@ -5,14 +5,14 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
-import P3.DataStructures.List.List;
-import P3.DataStructures.Map.Map;
-import P3.DataStructures.Map.HashTable.HashTableSC;
-import P3.DataStructures.Map.HashTable.SimpleHashFunction;
-import P3.DataStructures.SortedList.SortedArrayList;
-import P3.DataStructures.SortedList.SortedList;
-import P3.DataStructures.Tree.BTNode;
-import P3.DataStructures.Tree.utils.BinaryTreePrinter;
+import P3.DataStructures.List.*;
+import P3.DataStructures.Map.*;
+import P3.DataStructures.Map.HashTable.*;
+import P3.DataStructures.SortedList.*;
+import P3.DataStructures.Stack.*;
+import P3.DataStructures.Tree.*;
+import P3.DataStructures.Tree.utils.*;
+
 
 public class HuffmanCoding {
 	public static void main(String[] args) {
@@ -20,11 +20,11 @@ public class HuffmanCoding {
 	}
 
 	private static void run() {
-		String data = loadData("huffman.txt");
+		String data = loadData("huffman3.txt");
 		Map<String, Integer> fD = computeFD(data);
 		BTNode<String, Integer> huffmanRoot = huffmanTree(fD);
 		Map<String,String> encodedHuffman = huffmanCode(huffmanRoot);
-		String output = encode(encodedHuffman);
+		String output = encode(encodedHuffman, data);
 		processResults(fD,data,output);
 
 	}
@@ -77,7 +77,7 @@ public class HuffmanCoding {
 	public static BTNode<String, Integer> huffmanTree(Map<String, Integer> fD) {
 		int size = fD.size();
 		boolean isEmpty =true;
-		SortedList<BTNode<String,Integer>> sL = new SortedArrayList<BTNode<String,Integer>>(size);
+		SortedList<BTNode<String,Integer>> sL = new SortedLinkedList<BTNode<String,Integer>>();
 		List<String> keys = fD.getKeys();
 		List<Integer> vals = fD.getValues();
 
@@ -97,12 +97,11 @@ public class HuffmanCoding {
 				n.setRightChild(y);
 				isEmpty = false;
 			} else {
-				
-				if(x.getValue() == y.getValue()) {
-					if (x.getKey().compareTo(y.getKey()) < 0) {
-						n.setLeftChild(y);
-						n.setRightChild(x);
-					}
+
+				if(x.getValue() == y.getValue() && y.getKey().compareTo(x.getKey()) < 0) {
+					n.setLeftChild(y);
+					n.setRightChild(x);
+
 				} else {
 					n.setLeftChild(x);
 					n.setRightChild(y);
@@ -115,6 +114,7 @@ public class HuffmanCoding {
 
 		BTNode<String, Integer> nodeToReturn = minFreq(sL);
 		System.out.println("Root of Huffman Tree: {" + nodeToReturn.getKey() + "," + nodeToReturn.getValue()+"}");
+		System.out.println("----------------------------");
 		System.out.println("Huffman Tree: ");
 		BinaryTreePrinter.print(nodeToReturn);
 
@@ -145,32 +145,59 @@ public class HuffmanCoding {
 	}
 
 	public static Map<String, String> huffmanCode(BTNode<String, Integer> huffmanRoot) {
-		Map<String, String> ht= new HashTableSC<String, String>(new SimpleHashFunction<String>());
-		ht = recTraversal(huffmanRoot, ht);
+		Map<String, String> ht = new HashTableSC<String, String>(new SimpleHashFunction<String>());
+		Stack<String> stack = new LinkedListStack<>();
+		ht = recTraversal(huffmanRoot, ht, stack);
+		System.out.println("----------------------------");
+		System.out.println("Huffman Prefix Code Generated is: ");
 		ht.print(System.out);
 		return ht;
 	}
 
-	private static Map<String,String> recTraversal(BTNode<String, Integer> huffmanRoot, Map<String, String> ht) {
+	private static Map<String,String> recTraversal(BTNode<String, Integer> huffmanRoot, Map<String, String> ht, Stack<String> s) {
 		if(huffmanRoot == null) return ht;
 		else {
-			
-			recTraversal(huffmanRoot.getLeftChild(), ht);
-			recTraversal(huffmanRoot.getRightChild(), ht);
+			if(isLeaf(huffmanRoot)) {
+				Stack<String> temp = new LinkedListStack<>();
+				String encode = "";
+				while (!s.isEmpty()) {
+					String popped = s.pop();
+					encode = popped + encode;
+					temp.push(popped);
+				}
+				while(!temp.isEmpty()) s.push(temp.pop());
+
+				ht.put(huffmanRoot.getKey(), encode);
+			} 
+			s.push("0");
+			recTraversal(huffmanRoot.getLeftChild(), ht,s);
+			s.pop();
+
+			s.push("1");
+			recTraversal(huffmanRoot.getRightChild(), ht,s);
+			s.pop();
 		}
+
 		return ht;
 	}
 
-	
-
-	public static String encode(Map<String, String> encodedHuffman) {
+	private static boolean isLeaf(BTNode<String, Integer> huffmanRoot) {
+		return huffmanRoot.getLeftChild() == null && huffmanRoot.getRightChild() == null;
+	}
+	public static String encode(Map<String, String> encodedHuffman, String inputString) {
 		String result = "";
-		List<String> vals = encodedHuffman.getValues();
-		for (String string : vals) {
-			result += string;
+
+		for (int i = 0; i < inputString.length(); i++) {
+			String letter = String.valueOf(inputString.charAt(i));
+			if(encodedHuffman.containsKey(letter))
+				result += encodedHuffman.get(letter);			
+
 		}
+		System.out.println("----------------------------");
+		System.out.println(inputString + " is now encoded as: " + result);
 		return result;
 	}
+
 
 	public static void processResults(Map<String, Integer> fD, String inputData, String outputData) {
 
