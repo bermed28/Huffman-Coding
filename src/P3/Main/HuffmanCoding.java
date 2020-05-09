@@ -20,7 +20,7 @@ public class HuffmanCoding {
 	}
 
 	private static void run() {
-		String data = loadData("huffman3.txt");
+		String data = loadData("huffman.txt");
 		Map<String, Integer> fD = computeFD(data);
 		BTNode<String, Integer> huffmanRoot = huffmanTree(fD);
 		Map<String,String> encodedHuffman = huffmanCode(huffmanRoot);
@@ -91,17 +91,16 @@ public class HuffmanCoding {
 
 			BTNode<String, Integer> x = minFreq(sL);
 			BTNode<String, Integer> y = minFreq(sL);
-
+			
 			if(isEmpty) {
 				n.setLeftChild(x);
 				n.setRightChild(y);
 				isEmpty = false;
-			} else {
-
-				if(x.getValue() == y.getValue() && y.getKey().compareTo(x.getKey()) < 0) {
+			}else {
+				if(x.getValue() == y.getValue() && x.getKey().compareTo(y.getKey()) < 0) {
 					n.setLeftChild(y);
 					n.setRightChild(x);
-
+	
 				} else {
 					n.setLeftChild(x);
 					n.setRightChild(y);
@@ -148,9 +147,6 @@ public class HuffmanCoding {
 		Map<String, String> ht = new HashTableSC<String, String>(new SimpleHashFunction<String>());
 		Stack<String> stack = new LinkedListStack<>();
 		ht = recTraversal(huffmanRoot, ht, stack);
-		System.out.println("----------------------------");
-		System.out.println("Huffman Prefix Code Generated is: ");
-		ht.print(System.out);
 		return ht;
 	}
 
@@ -193,13 +189,22 @@ public class HuffmanCoding {
 				result += encodedHuffman.get(letter);			
 
 		}
-		System.out.println("----------------------------");
-		System.out.println(inputString + " is now encoded as: " + result);
+		
 		return result;
 	}
 
 
 	public static void processResults(Map<String, Integer> fD, String inputData, String outputData) {
-
+		int bytes = 0;
+		int savings = 0;
+		System.out.println("----------------------------");
+		System.out.println("Frequency Distribution of " + inputData + " is: ");
+		fD.print(System.out);		
+		System.out.println("----------------------------");
+		System.out.println("Original Text: " + inputData);
+		System.out.println("Encoded Text: " + outputData);
+		System.out.println("----------------------------");
+		System.out.println("Amount of bytes needed to store the encoded text: " + bytes);
+		System.out.println("Savings percentage compared to the amount of bytes needed for the original text: " + savings + "%");
 	}
 }
