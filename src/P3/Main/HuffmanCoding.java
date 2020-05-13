@@ -244,7 +244,7 @@ public class HuffmanCoding {
 		/*Here, we just get the bytes of the original string with string.getBytes().length*/
 		int inputBytes = inputData.getBytes().length;
 		
-		/*For he bytes of the encoded one, it's not so easy.
+		/*For the bytes of the encoded one, it's not so easy.
 		 * 
 		 * Here we have to get the bytes the same way we got the bytes for the original one but we divide it by 8,
 		 * because 1 byte = 8 bits. 
