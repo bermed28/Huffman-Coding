@@ -1,4 +1,4 @@
-package P3.DataStructures.Tree.utils;
+package P3.DataStructures.utils;
 
 public interface Comparator<E> {
 	/**

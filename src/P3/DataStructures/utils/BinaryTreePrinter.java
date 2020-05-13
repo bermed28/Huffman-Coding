@@ -1,4 +1,4 @@
-package P3.DataStructures.Tree.utils;
+package P3.DataStructures.utils;
 
 import P3.DataStructures.List.ArrayList;
 import P3.DataStructures.List.List;
