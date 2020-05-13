@@ -283,4 +283,13 @@ public class LinkedList<E> implements List<E> {
 		while (size() > 0)
 			remove(0);
 	}
+	
+	@Override
+	public Object[] toArray() {
+		Object[] result = new Object[this.size()];
+		for (int i=0; i < this.size(); ++i) {
+			result[i] = this.get(i);
+		}
+		return result;
+	}
 }

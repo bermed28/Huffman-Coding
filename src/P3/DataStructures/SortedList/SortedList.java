@@ -1,7 +1,5 @@
 package P3.DataStructures.SortedList;
 
-import java.util.Iterator;
-
 public interface SortedList<E extends Comparable<? super E>> {
 
 	/**
@@ -82,6 +80,5 @@ public interface SortedList<E extends Comparable<? super E>> {
 	 */
 	E[] toArray();
 
-	Iterator<E> iterator();
 
 }

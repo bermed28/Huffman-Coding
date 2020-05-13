@@ -17,4 +17,5 @@ public interface List<E> extends Iterable<E> {
 	public boolean isEmpty();
 	public boolean contains(E obj);
 	public void clear();
+	public Object[] toArray();
 }

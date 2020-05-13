@@ -1,7 +1,5 @@
 package P3.DataStructures.SortedList;
 
-import java.util.Iterator;
-import java.util.NoSuchElementException;
 
 
 /**
@@ -52,32 +50,6 @@ public class SortedLinkedList<E extends Comparable<? super E>> extends AbstractS
 		}				
 	} // End of Node class
 
-	
-	private class ListIterator implements Iterator<E> {
-
-		private Node<E> nextNode;
-		
-		public ListIterator() {
-			nextNode = head.getNext();
-		}
-	
-		@Override
-		public boolean hasNext() {
-			return nextNode != null;
-		}
-
-		@Override
-		public E next() {
-			if (hasNext()) {
-				E val = nextNode.getValue();
-				nextNode = nextNode.getNext();
-				return val;
-			}
-			else
-				throw new NoSuchElementException();				
-		}
-		
-	} // End of ListIterator class
 	
 	private Node<E> head; // First DATA node (This is NOT a dummy header node)
 	public SortedLinkedList() {
@@ -220,7 +192,4 @@ public class SortedLinkedList<E extends Comparable<? super E>> extends AbstractS
 		return theArray;
 	}
 
-	public Iterator<E> iterator() {
-		return new ListIterator();
-	}
 }

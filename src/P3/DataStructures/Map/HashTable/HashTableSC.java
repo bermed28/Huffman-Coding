@@ -37,7 +37,7 @@ public class HashTableSC<K, V> implements Map<K, V> {
 	private List<BucketNode<K, V>>[] buckets;
 	private HashFunction<K> hashFunction;
 	private final static double loadFactor = 0.75;
-	private static final int DEFAULT_SIZE = 10;
+	private static final int DEFAULT_SIZE = 11;
 
 
 	@SuppressWarnings("unchecked")
@@ -95,7 +95,7 @@ public class HashTableSC<K, V> implements Map<K, V> {
 		remove(key);
 		
 		if((size() / buckets.length) > loadFactor) {
-			System.out.println("REHASHING NEEDED");
+			//System.out.println("REHASHING NEEDED");
 			rehash();
 		}
 		

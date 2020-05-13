@@ -10,7 +10,7 @@ import P3.DataStructures.Tree.utils.BinaryTreePrinter.PrintableNode;
  * @param <K> Generic type for the key of the values to be stored in the nodes
  * @param <V> Generic type for the values to be stored in the nodes
  */
-public class BTNode<K extends Comparable<? super K>, V> implements Comparable<BTNode<K,V>>, PrintableNode {
+public class BTNode<K extends Comparable<? super K>, V extends Comparable<? super V>> implements Comparable<BTNode<K,V>>, PrintableNode {
 	private K key;
 	private V value;
 	private BTNode<K, V> leftChild, rightChild, parent;
@@ -28,6 +28,7 @@ public class BTNode<K extends Comparable<? super K>, V> implements Comparable<BT
 		this.parent = parent;
 		this.leftChild = this.rightChild = null;
 	}
+
 
 	public K getKey() {
 		return key;
@@ -64,6 +65,20 @@ public class BTNode<K extends Comparable<? super K>, V> implements Comparable<BT
 		value = null;
 		leftChild = rightChild = parent = null;
 	}
+	/*
+	 * This is the method talked about in the huffman_tree() method, 
+	 * that is delegated the task of determining which node is the left and right child
+	 * if the case occurred that two nodes have the same frequency
+	 */
+	@Override
+	public int compareTo(BTNode<K,V> n) {
+		/*We first compare the VALUES, if they're not the same just return whatever that comparison determined*/
+		final int freqComp = this.getValue().compareTo(n.getValue());
+		if(freqComp != 0) return freqComp;
+		
+		/*If they have the same frequency then just return whatever the comparison between KEYS determines*/
+		return this.getKey().compareTo(n.getKey());
+	}
 
 	/* The methods below are merely to comply with the PrintableNode interface,
 	 * used by the BinaryTreePrinter class to nicely display a binary tree.
@@ -82,9 +97,6 @@ public class BTNode<K extends Comparable<? super K>, V> implements Comparable<BT
 	public String getText() {
 		return key.toString() + ":" + value.toString();
 	}
-	@Override
-	public int compareTo(BTNode<K,V> n) {
-		return this.getKey().compareTo(n.getKey());
-	}
+	
 
 }
