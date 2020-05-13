@@ -8,15 +8,15 @@ public class ArrayList<E> implements List<E> {
 
 	// private fields
 	private E elements[];
-	
+
 	private int currentSize;
 
 	private static final int  DEFAULT_SIZE = 11;
-	
-	
+
+
 	private class ListIterator implements Iterator<E> {
 		private int currentPosition;
-		
+
 		public ListIterator() {
 			this.currentPosition = 0;
 		}
@@ -36,7 +36,7 @@ public class ArrayList<E> implements List<E> {
 		}
 	}
 
-	
+
 	@SuppressWarnings("unchecked")
 	public ArrayList(int initialCapacity) {
 		if (initialCapacity < 1)
@@ -44,25 +44,21 @@ public class ArrayList<E> implements List<E> {
 		this.currentSize = 0;
 		this.elements = (E[]) new Object[initialCapacity];
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public ArrayList() {
-		
+
 		this.currentSize = 0;
 		this.elements = (E[]) new Object[DEFAULT_SIZE];
 	}
 
 	@Override
 	public void add(E obj) {
-		if (obj == null)
-			throw new IllegalArgumentException("Object cannot be null.");
-		else {
-			if (this.size() == this.elements.length)
-				reAllocate();
-			this.elements[this.currentSize++] = obj;
-		}		
+		if (this.size() == this.elements.length)
+			reAllocate();
+		this.elements[this.currentSize++] = obj;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private void reAllocate() {
 		/* create a new array with twice the size */

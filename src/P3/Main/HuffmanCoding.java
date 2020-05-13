@@ -36,7 +36,7 @@ public class HuffmanCoding {
 
 	/* This method just runs all the main methods developed or the algorithm */
 	private static void HuffmanEncodedResult() {
-		String data = load_data("stringData3.txt");
+		String data = load_data("stringData2.txt");
 		Map<String, Integer> fD = compute_fd(data);
 		BTNode<String, Integer> huffmanRoot = huffman_tree(fD);
 		Map<String,String> encodedHuffman = huffman_code(huffmanRoot);
