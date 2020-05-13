@@ -1,8 +1,7 @@
 package P3.DataStructures.Tree.utils;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import P3.DataStructures.List.ArrayList;
+import P3.DataStructures.List.List;
 
 /**
  * Binary tree printer

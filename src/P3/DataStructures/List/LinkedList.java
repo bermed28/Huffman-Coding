@@ -1,5 +1,6 @@
 package P3.DataStructures.List;
 
+/*These 2 imports came with the class itself provided by the professor*/
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 

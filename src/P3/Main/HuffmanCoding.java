@@ -268,7 +268,7 @@ public class HuffmanCoding {
 		 * 
 		 * This means the encoding worked and we saved space! 
 		 * 
-		 * Horray! :D */
+		 * Hooray! :D */
 		System.out.println("Symbol\t" + "Frequency   " + "Code");
 		System.out.println("------\t" + "---------   " + "----");
 
