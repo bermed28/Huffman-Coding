@@ -65,10 +65,14 @@ public class BTNode<K extends Comparable<? super K>, V extends Comparable<? supe
 		value = null;
 		leftChild = rightChild = parent = null;
 	}
-	/*
-	 * This is the method talked about in the huffman_tree() method, 
-	 * that is delegated the task of determining which node is the left and right child
-	 * if the case occurred that two nodes have the same frequency
+	
+	/**
+	 *  This is the method talked about in the huffman_tree() method, 
+	 *  that is delegated the task of determining which node is the left and right child
+	 *  if the case occurred that two nodes have the same frequency
+	 *  
+	 *  @param n node that the target object will compare based on key or value 
+	 *  @return a negative number, 0, or a positive number. Depends whether the target object is less than, equal or greater than n respectively.
 	 */
 	@Override
 	public int compareTo(BTNode<K,V> n) {
