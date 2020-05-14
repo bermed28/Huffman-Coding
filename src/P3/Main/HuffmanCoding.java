@@ -138,46 +138,47 @@ public class HuffmanCoding {
 			parent.setKey(list.get(0).getKey());
 			parent.setValue(list.get(0).getValue());
 			list.add(parent);
-		}
-		/*If the string has more than one node we do the following*/
-		while (list.size() > 1) {
-			/*We take the first two lowest frequencies of the SortedList and make them into separate nodes
-			 * 
-			 * P.S. If the case were to appear that two nodes have the same frequency, 
-			 * we take care of that problem inside the compareTo() method of BTNode<K,V>.
-			 * 
-			 * This is possible because in order to add our nodes we had to make BTNode<K,V> comparable.
-			 * 
-			 * So we can just delegate that task to the compareTo() method of BTNode<K,V> (see line 87 of BTNode<K,V> inside the Tree package),
-			 * and it will do the same as adding an if in this method to compare the keys and values of those two nodes*/
-			BTNode<String, Integer> leftChild = list.removeIndex(0);
-			BTNode<String, Integer> rightChild = list.removeIndex(0);
-			
-			/* We make the node we're going to use to "merge" the two lowest frequencies into one, 
-			 * thus making this node the "parent" of the left and right nodes extracted from the SortedList */
-			BTNode<String, Integer> parent = new BTNode<String, Integer>();
-
-			/* Now all we do is we set the parent's left and right children be the extracted nodes from the SortedList,
-			 * We also merge the frequencies and the keys */
-			parent.setLeftChild(leftChild);
-			parent.setRightChild(rightChild);
-
-			parent.setKey(leftChild.getKey() + rightChild.getKey());
-			parent.setValue(leftChild.getValue() + rightChild.getValue());
-
-			/* Next we add this parent node back to the SortedList and we rinse and repeat 
-			 * until the only merged node left on the list is the root node of the tree,
-			 * which should have the same frequency as the number of characters*/
-			list.add(parent);
-
+		} else {
+			/*If the string has more than one node we do the following*/
+			while (list.size() > 1) {
+				/*We take the first two lowest frequencies of the SortedList and make them into separate nodes
+				 * 
+				 * P.S. If the case were to appear that two nodes have the same frequency, 
+				 * we take care of that problem inside the compareTo() method of BTNode<K,V>.
+				 * 
+				 * This is possible because in order to add our nodes we had to make BTNode<K,V> comparable.
+				 * 
+				 * So we can just delegate that task to the compareTo() method of BTNode<K,V> (see BTNode<K,V> inside the Tree package),
+				 * and it will do the same as adding an if in this method to compare the keys and values of those two nodes*/
+				BTNode<String, Integer> leftChild = list.removeIndex(0);
+				BTNode<String, Integer> rightChild = list.removeIndex(0);
+				
+				/* We make the node we're going to use to "merge" the two lowest frequencies into one, 
+				 * thus making this node the "parent" of the left and right nodes extracted from the SortedList */
+				BTNode<String, Integer> parent = new BTNode<String, Integer>();
+	
+				/* Now all we do is we set the parent's left and right children be the extracted nodes from the SortedList,
+				 * We also merge the frequencies and the keys */
+				parent.setLeftChild(leftChild);
+				parent.setRightChild(rightChild);
+	
+				parent.setKey(leftChild.getKey() + rightChild.getKey());
+				parent.setValue(leftChild.getValue() + rightChild.getValue());
+	
+				/* Next we add this parent node back to the SortedList and we rinse and repeat 
+				 * until the only merged node left on the list is the root node of the tree,
+				 * which should have the same frequency as the number of characters*/
+				list.add(parent);
+	
+			}
 		}
 		
 		/*Finally we just extract the root node from the list and return it*/
 		BTNode<String, Integer> rootNode = list.removeIndex(0);
 		
-		/**
+		/**/
 		BinaryTreePrinter.print(rootNode); //Uncomment to see full Huffman Tree built with the generated root node 
-		*/
+		/**/
 		
 		return rootNode;
 	}
@@ -200,7 +201,7 @@ public class HuffmanCoding {
 	 */
 	public static Map<String, String> huffman_code(BTNode<String, Integer> huffmanRoot) {
 		/* This is basically the method that makes and organizes all of our things, the real work is in the recursive helper method.
-		 * Look up buidPrefixCode in line 275 to see what the recursive method does */
+		 * Look up buidPrefixCode() to see what the recursive method does */
 		Map<String,String> ht = new HashTableSC<String, String>(new SimpleHashFunction<String>());
 		buildPrefixCode(ht,huffmanRoot,"");
 		return ht;	
@@ -272,30 +273,33 @@ public class HuffmanCoding {
 		System.out.println("Symbol\t" + "Frequency   " + "Code");
 		System.out.println("------\t" + "---------   " + "----");
 
-		List<String> letters = fD.getKeys();
-		List<Integer> freq = fD.getValues();
-		List<String> orderedLetters = new LinkedList<String>(); //We use this to make the output in decreasing order by frequency
-		ms.sortList(freq);
+		SortedArrayList<BTNode<String, Integer>> sortedList = new SortedArrayList<BTNode<String,Integer>>(fD.size());
 
-		orderLetters(letters, orderedLetters,freq, fD);
+        /* To print the table in decreasing order by frequency, we do the same thing we did when we built the tree
+         * We add each key with it's frequency in a node into a SortedList, this way we get the frequencies in ascending order*/
+        for (String key : fD.getKeys()) {
+            BTNode<String,Integer> node = new BTNode<String,Integer>(key, fD.get(key));
+            sortedList.add(node);
+        }
 
-		for (int j = fD.size() -1 ; j >= 0; j--) {
-			System.out.println(orderedLetters.get(j) + "\t" + freq.get(j) + "\t    " +encodedHuffman.get(orderedLetters.get(j)));
-		}
-
+        /* Since we have the frequencies in ascending order, we just traverse the list backwards and start printing the nodes 
+         * and find the same key in our code "Lookup Table" hashtable. That way we get the table in decreasing order by frequency*/
+        for (int i = sortedList.size() - 1; i >= 0; i--) {
+            BTNode<String,Integer> node = sortedList.get(i);
+            System.out.println(node.getKey() + "\t" + node.getValue() + "\t    " + encodedHuffman.get(node.getKey()));
+        }
 		System.out.println("\nOriginal String: \n" + inputData);
 		System.out.println("Encoded String: \n" + output + "\n");
 		System.out.println("The original string requires " + inputBytes + " bytes.");
 		System.out.println("The encoded string requires " + outputBytes + " bytes.");
 		System.out.println("Difference in space requiered is " + savings + "%.");
 	}
-
 	
-
+	
 	////PRIVATE METHODS USED INSIDE MAIN METHODS//////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Recursive helper method for the huffman_code() method above in line 193
+	 * Recursive helper method for the huffman_code() method above
 	 * 
 	 * @param ht - map that will store our generated codes mapped to the character they belong to
 	 * @param node - node we're currently traversing. At the beginning it's the root of the tree.
@@ -339,36 +343,4 @@ public class HuffmanCoding {
 		return node.getLeftChild() == null && node.getRightChild() == null;
 	}
 	
-	/**
-	 * Method that organizes the letters according to their frequencies in decreasing order 
-	 * @param letters - list of characters
-	 * @param orderedLetters - list with our ordered characters according to their frequency
-	 * @param freq - sorted frequencies
-	 * @param fD - frequency distribution map
-	 */
-	private static void orderLetters(List<String> letters, List<String> orderedLetters, List<Integer> freq, Map<String, Integer> fD) {
-		
-		int i = 0; /*index to traverse unordered letters*/ 
-		for (int j = 0; j < freq.size(); j++) {
-			/*While we haven't finished traversing all the frequencies*/
-			while(i < fD.size()) {
-				/*We organize all our letters in order according to their frequency*/
-				if (fD.get(letters.get(i)) == freq.get(j)) {
-					/*If we ordered a letter, 
-					 * we add it to our ordered list and remove it from the original 
-					 * and re-start the index so we can start looking from the start for other frequencies.
-					 * 
-					 * We remove the letter from the unordered list to avoid 
-					 * repetitions in case there are letters with the same frequency*/
-					orderedLetters.add(letters.get(i));
-					letters.remove(i);
-					i = 0;
-					break;
-				}
-				/*If we didn't order a letter, we increase the index to keep looking*/
-				i++;
-			}
-		} 
-	}
-
 }
