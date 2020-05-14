@@ -34,12 +34,19 @@ public class HuffmanCoding {
 
 	/* This method just runs all the main methods developed or the algorithm */
 	private static void HuffmanEncodedResult() {
-		String data = load_data("stringData.txt");
-		Map<String, Integer> fD = compute_fd(data);
-		BTNode<String, Integer> huffmanRoot = huffman_tree(fD);
-		Map<String,String> encodedHuffman = huffman_code(huffmanRoot);
-		String output = encode(encodedHuffman, data);
-		process_results(fD, encodedHuffman,data,output);
+		String data = load_data("stringData4.txt");
+		
+		/*If input string is not empty we can encode the text using our algorithm*/
+		if(!data.isEmpty()) {
+			Map<String, Integer> fD = compute_fd(data);
+			BTNode<String, Integer> huffmanRoot = huffman_tree(fD);
+			Map<String,String> encodedHuffman = huffman_code(huffmanRoot);
+			String output = encode(encodedHuffman, data);
+			process_results(fD, encodedHuffman,data,output);
+		} else {
+			System.out.println("Input Data Is Empty!");
+		}
+		
 	}
 
 	/**
@@ -56,7 +63,11 @@ public class HuffmanCoding {
 		try {
 			/*We create a new reader that accepts UTF-8 encoding and extract the input string from the file, and we return it*/
 			in = new BufferedReader(new InputStreamReader(new FileInputStream("inputData/" + inputFile), "UTF-8"));
-			line = in.readLine();
+			
+			/*If input file is empty just return an empty string, if not just extract the data*/
+			String extracted = in.readLine();
+			if(extracted != null)
+				line = extracted;
 
 		} catch (FileNotFoundException e) {
 
@@ -94,17 +105,18 @@ public class HuffmanCoding {
 		 * We use a hashtable because, given by previous experimentations, it's the most efficient way to count frequencies */
 		Map<String, Integer> ht = new HashTableSC<String, Integer>(new SimpleHashFunction<String>());
 
-
-		/*Like before, we iterate through every character inside out string and count how many times it appears*/
-		for (Character character : inputString.toCharArray()) {
-
-			/* If it's in the map, add one to the frequency, 
-			 * if not just add it with a frequency of 1 because it's the first time we see it*/
-			String letter =String.valueOf(character);
-			if (!ht.containsKey(letter)) {
-				ht.put(letter, 1);
-			} else {
-				ht.put(letter, ht.get(letter) + 1);
+		if(!inputString.isEmpty()) {
+			/*Like before, we iterate through every character inside out string and count how many times it appears*/
+			for (Character character : inputString.toCharArray()) {
+	
+				/* If it's in the map, add one to the frequency, 
+				 * if not just add it with a frequency of 1 because it's the first time we see it*/
+				String letter =String.valueOf(character);
+				if (!ht.containsKey(letter)) {
+					ht.put(letter, 1);
+				} else {
+					ht.put(letter, ht.get(letter) + 1);
+				}
 			}
 		}
 
@@ -130,7 +142,6 @@ public class HuffmanCoding {
 
 		/*Now we go through each K,V pair and add them to an instance of a node and add them in increasing order inside out SortedList*/
 		for (int i = 0; i < fD.size(); i++) list.add(new BTNode<String, Integer>(letters.get(i), freq.get(i)));
-
 
 		/*If the list has more than one node we do the following*/
 		while (list.size() > 1) {
@@ -169,7 +180,7 @@ public class HuffmanCoding {
 		/*Finally we just extract the root node from the list and return it*/
 		BTNode<String, Integer> rootNode = list.removeIndex(0);
 
-		/**
+		/*
 		BinaryTreePrinter.print(rootNode); //Uncomment to see full Huffman Tree built with the generated root node 
 		 */
 
@@ -196,7 +207,13 @@ public class HuffmanCoding {
 		/* This is basically the method that makes and organizes all of our things, the real work is in the recursive helper method.
 		 * Look up buidPrefixCode() at the end of the code to see what the recursive method does */
 		Map<String,String> ht = new HashTableSC<String, String>(new SimpleHashFunction<String>());
-		buildPrefixCode(ht,huffmanRoot,"");
+		
+		/*If the string we're trying to encode has only one character, the huffman code will be just 1, because it will only be 1 bit*/
+		if(huffmanRoot.getKey().length() == 1) {
+			ht.put(huffmanRoot.getKey(), "1");
+		}else
+			/*If it has more than one character, we build the code according to our tree*/
+			buildPrefixCode(ht,huffmanRoot,"");
 		return ht;	
 	}
 
