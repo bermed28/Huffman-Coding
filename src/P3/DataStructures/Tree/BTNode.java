@@ -76,12 +76,12 @@ public class BTNode<K extends Comparable<? super K>, V extends Comparable<? supe
 	 */
 	@Override
 	public int compareTo(BTNode<K,V> n) {
-		/*We first compare the VALUES, if they're not the same just return whatever that comparison determined*/
-		final int freqComp = this.getValue().compareTo(n.getValue());
+		/*We first compare the FREQUENCIES, if they're not the same just return whatever that comparison determined*/
+		final int freqComp = this.getKey().compareTo(n.getKey());
 		if(freqComp != 0) return freqComp;
 		
-		/*If they have the same frequency then just return whatever the comparison between KEYS determines*/
-		return this.getKey().compareTo(n.getKey());
+		/*If they have the same frequency then just return whatever the comparison between SYMBOLS determines*/
+		return this.getValue().compareTo(n.getValue());
 	}
 
 	/* The methods below are merely to comply with the PrintableNode interface,

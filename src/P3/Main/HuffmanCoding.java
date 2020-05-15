@@ -34,12 +34,12 @@ public class HuffmanCoding {
 
 	/* This method just runs all the main methods developed or the algorithm */
 	private static void HuffmanEncodedResult() {
-		String data = load_data("stringData4.txt");
+		String data = load_data("stringData3.txt");
 		
 		/*If input string is not empty we can encode the text using our algorithm*/
 		if(!data.isEmpty()) {
 			Map<String, Integer> fD = compute_fd(data);
-			BTNode<String, Integer> huffmanRoot = huffman_tree(fD);
+			BTNode<Integer,String> huffmanRoot = huffman_tree(fD);
 			Map<String,String> encodedHuffman = huffman_code(huffmanRoot);
 			String output = encode(encodedHuffman, data);
 			process_results(fD, encodedHuffman,data,output);
@@ -132,16 +132,16 @@ public class HuffmanCoding {
 	 * @param fD hashtable with our frequencies
 	 * @return Root Node that builds our huffman tree
 	 */
-	public static BTNode<String, Integer> huffman_tree(Map<String, Integer> fD) {
+	public static BTNode<Integer, String> huffman_tree(Map<String, Integer> fD) {
 
 		/* First we create a sorted list to put the lowest frequencies at the beginning of the list, so it's easier to extract
 		 * P.S. Using a SortedList is a good substitute for the Priority Queue that is mostly used in this algorithm */
-		SortedList<BTNode<String,Integer>> list = new SortedArrayList<>(fD.size());
+		SortedList<BTNode<Integer,String>> list = new SortedArrayList<>(fD.size());
 		List<String> letters = fD.getKeys();
 		List<Integer> freq = fD.getValues();
 
 		/*Now we go through each K,V pair and add them to an instance of a node and add them in increasing order inside out SortedList*/
-		for (int i = 0; i < fD.size(); i++) list.add(new BTNode<String, Integer>(letters.get(i), freq.get(i)));
+		for (int i = 0; i < fD.size(); i++) list.add(new BTNode<Integer, String>(freq.get(i),letters.get(i)));
 
 		/*If the list has more than one node we do the following*/
 		while (list.size() > 1) {
@@ -154,12 +154,12 @@ public class HuffmanCoding {
 			 * 
 			 * So we can just delegate that task to the compareTo() method of BTNode<K,V> (see BTNode<K,V> inside the Tree package),
 			 * and it will do the same as adding an if in this method to compare the keys and values of those two nodes*/
-			BTNode<String, Integer> leftChild = list.removeIndex(0);
-			BTNode<String, Integer> rightChild = list.removeIndex(0);
+			BTNode<Integer, String> leftChild = list.removeIndex(0);
+			BTNode<Integer, String> rightChild = list.removeIndex(0);
 
 			/* We make the node we're going to use to "merge" the two lowest frequencies into one, 
 			 * thus making this node the "parent" of the left and right nodes extracted from the SortedList */
-			BTNode<String, Integer> parent = new BTNode<String, Integer>();
+			BTNode<Integer,String> parent = new BTNode<Integer,String>();
 
 			/* Now all we do is we set the parent's left and right children be the extracted nodes from the SortedList,
 			 * We also merge the frequencies and the keys */
@@ -177,8 +177,9 @@ public class HuffmanCoding {
 		}
 
 
+		
 		/*Finally we just extract the root node from the list and return it*/
-		BTNode<String, Integer> rootNode = list.removeIndex(0);
+		BTNode<Integer,String> rootNode = list.removeIndex(0);
 
 		/*
 		BinaryTreePrinter.print(rootNode); //Uncomment to see full Huffman Tree built with the generated root node 
@@ -203,14 +204,14 @@ public class HuffmanCoding {
 	 * @param huffmanRoot Root Node of huffman tree so we can traverse and construct the prefix codes
 	 * @return HashTable with our "lookup table" that has all of our prefix codes mapped to each character
 	 */
-	public static Map<String, String> huffman_code(BTNode<String, Integer> huffmanRoot) {
+	public static Map<String, String> huffman_code(BTNode<Integer,String> huffmanRoot) {
 		/* This is basically the method that makes and organizes all of our things, the real work is in the recursive helper method.
 		 * Look up buidPrefixCode() at the end of the code to see what the recursive method does */
 		Map<String,String> ht = new HashTableSC<String, String>(new SimpleHashFunction<String>());
 		
 		/*If the string we're trying to encode has only one character, the huffman code will be just 1, because it will only be 1 bit*/
-		if(huffmanRoot.getKey().length() == 1) {
-			ht.put(huffmanRoot.getKey(), "1");
+		if(huffmanRoot.getValue().length() == 1) {
+			ht.put(huffmanRoot.getValue(), "1");
 		}else
 			/*If it has more than one character, we build the code according to our tree*/
 			buildPrefixCode(ht,huffmanRoot,"");
@@ -282,12 +283,12 @@ public class HuffmanCoding {
 		System.out.println("Symbol\t" + "Frequency   " + "Code");
 		System.out.println("------\t" + "---------   " + "----");
 
-		SortedArrayList<BTNode<String, Integer>> sortedList = new SortedArrayList<BTNode<String,Integer>>(fD.size());
+		SortedArrayList<BTNode<Integer,String>> sortedList = new SortedArrayList<BTNode<Integer,String>>(fD.size());
 
 		/* To print the table in decreasing order by frequency, we do the same thing we did when we built the tree
 		 * We add each key with it's frequency in a node into a SortedList, this way we get the frequencies in ascending order*/
 		for (String key : fD.getKeys()) {
-			BTNode<String,Integer> node = new BTNode<String,Integer>(key, fD.get(key));
+			BTNode<Integer,String> node = new BTNode<Integer,String>(fD.get(key),key);
 			sortedList.add(node);
 		}
 
@@ -296,8 +297,8 @@ public class HuffmanCoding {
 		 * and find the same key in our prefix code "Lookup Table" we made earlier on in huffman_code(). 
 		 * That way we get the table in decreasing order by frequency*/
 		for (int i = sortedList.size() - 1; i >= 0; i--) {
-			BTNode<String,Integer> node = sortedList.get(i);
-			System.out.println(node.getKey() + "\t" + node.getValue() + "\t    " + encodedHuffman.get(node.getKey()));
+			BTNode<Integer,String> node = sortedList.get(i);
+			System.out.println(node.getValue() + "\t" + node.getKey() + "\t    " + encodedHuffman.get(node.getValue()));
 		}
 		
 		System.out.println("\nOriginal String: \n" + inputData);
@@ -317,7 +318,7 @@ public class HuffmanCoding {
 	 * @param node node we're currently traversing. At the beginning it's the root of the tree.
 	 * @param prefixCode variable we use to store the codes generated for each character
 	 */
-	public static void buildPrefixCode(Map<String, String> ht, BTNode<String, Integer> node, String prefixCode) {
+	public static void buildPrefixCode(Map<String, String> ht, BTNode<Integer,String> node, String prefixCode) {
 
 		/* In here we do a similar thing we do with traversals of a BST. 
 		 * 
@@ -346,7 +347,7 @@ public class HuffmanCoding {
 			 * The way we map the code to the character is by the key of the leaf, 
 			 * given that the leaf represents the character that we're constructing the prefix code for */
 
-			ht.put(node.getKey(), prefixCode);
+			ht.put(node.getValue(), prefixCode);
 		}
 	}
 
@@ -355,7 +356,7 @@ public class HuffmanCoding {
 	 * @param node
 	 * @return true if given node is a leaf, false otherwise
 	 */
-	private static boolean isLeaf(BTNode<String, Integer> node) {
+	private static boolean isLeaf(BTNode<Integer,String> node) {
 		return node.getLeftChild() == null && node.getRightChild() == null;
 	}
 
